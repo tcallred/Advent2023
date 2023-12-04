@@ -32,13 +32,13 @@ with open("input.txt", 'r') as file:
 
 def part2(lines):
     points = [len(set(card[0]).intersection(set(card[1]))) for card in parse(lines)]
-    cardcount = {idx: 1 for idx in range(len(points))}
+    cardcount = [1] * len(points)
     for idx in range(len(points)):
         p = points[idx]
         for _ in range(cardcount[idx]):
             for x in range(idx + 1, idx + p + 1):
                 cardcount[x] += 1
-    return sum(cardcount.values())
+    return sum(cardcount)
 
 print(part2(example))
 
