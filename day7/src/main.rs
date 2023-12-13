@@ -58,10 +58,10 @@ type Hand = [CardType; 5];
 fn parse_hand(s: &str) -> Hand {
     use crate::CardType::*;
     let mut hand = [N2; 5];
-    for i in 0..5 {
-        hand[i] = CardType::new(s.as_bytes()[i] as char)
+    for (i, card) in hand.iter_mut().enumerate() {
+        *card = CardType::new(s.as_bytes()[i] as char)
     }
-    return hand;
+    hand
 }
 
 fn frequencies<I, T>(iterator: I) -> HashMap<T, u32>
@@ -104,7 +104,7 @@ fn classify_hand(hand: Hand) -> HandType {
     }
     assert!(freqs.values().all(|v| *v == 1));
 
-    return HighCard;
+    HighCard
 }
 
 fn part1(input: Vec<&str>) -> i32 {
@@ -117,11 +117,11 @@ fn part1(input: Vec<&str>) -> i32 {
     }
     hands_and_bids.sort_by(|(hand1, _), (hand2, _)| {
         let classify_cmp = classify_hand(*hand1).cmp(&classify_hand(*hand2));
-        return if classify_cmp == Ordering::Equal {
+        if classify_cmp == Ordering::Equal {
             hand1.cmp(hand2).reverse()
         } else {
             classify_cmp.reverse()
-        };
+        }
     });
     // println!("{:?}", hands_and_bids);
     let mut total = 0;
