@@ -1,8 +1,6 @@
 use std::cmp::Ordering;
 use std::collections::HashMap;
-use std::fs::File;
 use std::io;
-use std::io::BufRead;
 use std::iter::Iterator;
 
 #[derive(Clone, Copy, PartialOrd, PartialEq, Eq, Ord, Hash, Debug)]
@@ -142,12 +140,9 @@ fn main() -> io::Result<()> {
         "QQQJA 483",
     ];
     println!("{}", part1(example));
-    let file = File::open("input.txt")?;
 
-    let reader = io::BufReader::new(file);
-
-    let lines: Vec<String> = reader.lines().map(|line| line.unwrap()).collect();
-    let lines: Vec<&str> = lines.iter().map(|s| s.as_str()).collect();
+    let contents = std::fs::read_to_string("input.txt").unwrap();
+    let lines = contents.lines().collect();
     println!("{}", part1(lines));
 
     Ok(())
