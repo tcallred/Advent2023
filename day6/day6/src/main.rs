@@ -12,10 +12,10 @@ fn ways_to_beat_record(time: i64, record_dist: i64) -> i64 {
 }
 
 fn main() {
-    let td = vec![(34, 204), (90, 1713), (89, 1210), (86, 1780)];
+    let td = [(34, 204), (90, 1713), (89, 1210), (86, 1780)];
     let mut prod = 1;
-    for (t, d) in td.iter() {
-        prod *= ways_to_beat_record(*t, *d);
+    for (t, d) in td {
+        prod *= ways_to_beat_record(t, d);
     }
     println!("{}", prod);
 
