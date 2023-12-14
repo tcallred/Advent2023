@@ -1,11 +1,10 @@
 use std::cmp::Ordering;
-use std::collections::HashMap;
 use std::io;
 use std::iter::Iterator;
 
-#[derive(Clone, Copy, PartialOrd, PartialEq, Eq, Ord, Hash, Debug)]
+#[derive(Clone, Copy, PartialOrd, PartialEq, Eq, Ord, Debug)]
 enum CardType {
-    A,
+    A = 0,
     K,
     Q,
     J,
@@ -37,7 +36,7 @@ impl CardType {
             '4' => N4,
             '3' => N3,
             '2' => N2,
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -64,45 +63,36 @@ fn parse_hand(s: &str) -> Hand {
     hand
 }
 
-fn frequencies<I, T>(iterator: I) -> HashMap<T, u32>
-    where
-        I: Iterator<Item=T>,
-        T: Eq + std::hash::Hash + Copy
-{
-    let mut m = HashMap::new();
-    for item in iterator {
-        if m.contains_key(&item) {
-            m.insert(item, m[&item] + 1);
-        } else {
-            m.insert(item, 1);
-        }
+fn frequencies(hand: Hand) -> [i32; 13] {
+    let mut freqs = [0; 13];
+    for card in hand {
+        freqs[card as usize] += 1;
     }
-
-    m
+    freqs
 }
 
 fn classify_hand(hand: Hand) -> HandType {
     use crate::HandType::*;
-    let freqs = frequencies(hand.into_iter());
-    if freqs.values().any(|v| *v == 5) {
+    let freqs = frequencies(hand);
+    if freqs.iter().any(|v| *v == 5) {
         return FiveOfAKind;
     }
-    if freqs.values().any(|v| *v == 4) {
+    if freqs.iter().any(|v| *v == 4) {
         return FourOfAKind;
     }
-    if freqs.values().any(|v| *v == 3) && freqs.values().any(|v| *v == 2) {
+    if freqs.iter().any(|v| *v == 3) && freqs.iter().any(|v| *v == 2) {
         return FullHouse;
     }
-    if freqs.values().any(|v| *v == 3) {
+    if freqs.iter().any(|v| *v == 3) {
         return ThreeOfAKind;
     }
-    if freqs.values().filter(|v| **v == 2).count() == 2 {
+    if freqs.iter().filter(|v| **v == 2).count() == 2 {
         return TwoPair;
     }
-    if freqs.values().any(|v| *v == 2) {
+    if freqs.iter().any(|v| *v == 2) {
         return OnePair;
     }
-    assert!(freqs.values().all(|v| *v == 1));
+    assert!(freqs.iter().all(|v| *v <= 1));
 
     HighCard
 }
