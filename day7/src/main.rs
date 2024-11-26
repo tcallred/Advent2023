@@ -58,7 +58,7 @@ fn parse_hand(s: &str) -> Hand {
     use crate::CardType::*;
     let mut hand = [N2; 5];
     for (i, card) in hand.iter_mut().enumerate() {
-        *card = CardType::new(s.as_bytes()[i] as char)
+        *card = CardType::new(s.chars().nth(i).unwrap())
     }
     hand
 }
